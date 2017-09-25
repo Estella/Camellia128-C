@@ -7,4 +7,4 @@ After compiling you ought to run the program with 4 args:
 -plaintext (hecadecimal w/o 0x)
 -key (hecadecimal w/o 0x)
 
-Note: as today (20-09-2017) this works only with -e -128
+Note: as today (25-09-2017) this works only with -128 (both -e and -d)
