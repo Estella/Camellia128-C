@@ -219,24 +219,24 @@ struct L func_F(struct L l, struct L k) {
 
    //return func_P(func_S(xor_L(l, k)));
    struct L res;
-   printf("l: ");
-   printL(l);
-   printf("k: ");
-   printL(k);
+   //printf("l: ");
+   //printL(l);
+   //printf("k: ");
+   //printL(k);
    res = xor_L(l, k);
-   printf("xor: ");
-   printL(res);
+   //printf("xor: ");
+   //printL(res);
    res = func_S(res);
-   printf("S: ");
-   printL(res);
+   //printf("S: ");
+   //printL(res);
    res = func_P(res);
-   printf("P: ");
-   printL(res);
+   //printf("P: ");
+   //printL(res);
    return res;
 }
 
 struct L func_FL(struct L l, struct L k) {
-   printf("FL:\n");
+   //printf("FL: ");
 
    struct W tmp1 = l.w[0], tmp2 = l.w[1];
    struct L res;
@@ -244,11 +244,12 @@ struct L func_FL(struct L l, struct L k) {
    res.w[1] = xor_W(shiftl_W(and_W(tmp1, k.w[0])), tmp2);
    res.w[0] = xor_W(or_W(res.w[1], k.w[1]), tmp1);
 
+   //printL(res);
    return res;
 }
 
 struct L func_FL_1(struct L l, struct L k) {
-   printf("FL_1\n");
+   //printf("FL_1: ");
 
    struct W tmp1 = l.w[0], tmp2 = l.w[1];
    struct L res;
@@ -256,11 +257,12 @@ struct L func_FL_1(struct L l, struct L k) {
    res.w[0] = xor_W(or_W(tmp2, k.w[1]), tmp1);
    res.w[1] = xor_W(shiftl_W(and_W(res.w[0], k.w[0])), tmp2);
 
+   //printL(res);
    return res;
 }
 
 struct Q func_round(struct Q q, struct L *k, int nr) {
-   printf("round %d:\n", i+1);
+   //printf("round %d:\n", i+1);
 
    struct Q res;
 
@@ -274,20 +276,20 @@ struct Q func_round(struct Q q, struct L *k, int nr) {
 void get_Ka(struct Q *Ka, struct Q Kl, struct Q Kr) {
 
    *Ka = func_round(xor_Q(Kl, Kr), sigma_tab, 0);
-   printf("Ka: 1r\n");
-   printQ(*Ka);
+   //printf("Ka: 1r\n");
+   //printQ(*Ka);
    *Ka = func_round(*Ka, sigma_tab, 1);
-   printf("Ka: 2r\n");
-   printQ(*Ka);
+   //printf("Ka: 2r\n");
+   //printQ(*Ka);
    *Ka = xor_Q(*Ka, Kl);
-   printf("Ka: xor Kl\n");
-   printQ(*Ka);
+   //printf("Ka: xor Kl\n");
+   //printQ(*Ka);
    *Ka = func_round(*Ka, sigma_tab, 2);
-   printf("Ka: 3r\n");
-   printQ(*Ka);
+   //printf("Ka: 3r\n");
+   //printQ(*Ka);
    *Ka = func_round(*Ka, sigma_tab, 3);
-   printf("Ka: 4r\n");
-   printQ(*Ka);
+   //printf("Ka: 4r\n");
+   //printQ(*Ka);
 }
 
 void get_Ka_Kb(struct Q *Ka, struct Q *Kb, struct Q Kl, struct Q Kr) {
@@ -524,8 +526,6 @@ void gen_keys128(struct L *kw, struct L *k, struct L *kl, struct Q key) {
 
    struct Q Ka;
    get_Ka(&Ka, key, zeroQ);
-   printf("Ka:\n");
-   printQ(Ka);
    //extracting values (4) to kw
    *kw = key.l[0];
    *(kw+1) = key.l[1];
@@ -560,7 +560,7 @@ void gen_keys128(struct L *kw, struct L *k, struct L *kl, struct Q key) {
 void gen_keys192(struct L *kw, struct L *k, struct L *kl, struct Q2 key) {
 
     struct Q Ka, Kb;
-    get_Ka_Kb(&Ka, &Kb, key.q[0], );
+    //get_Ka_Kb(&Ka, &Kb, key.q[0], );
 }
 
 void gen_keys256(struct L *kw, struct L *k, struct L *kl, struct Q2 key) {
@@ -591,28 +591,6 @@ int main(int argc, char **argv) {
    for(i = 0; i < 256; i++) sbox2[i] = (sbox1[i] << 1) | (sbox1[i] >> 7);
    for(i = 0; i < 256; i++) sbox3[i] = (sbox1[i] << 7) | (sbox1[i] >> 1);
    for(i = 0; i < 256; i++) sbox4[i] = sbox1[((i << 1) % 256) | (i >> 7)];
-
-   //printing sboxes
-   /*printf("Sbox1:\n");
-   for(i = 0; i < 256; i++) {
-      printf("%3d ", sbox1[i]);
-      if(i % 16 == 15) printf("\n");
-   }
-   printf("Sbox2:\n");
-   for(i = 0; i < 256; i++) {
-      printf("%3d ", sbox2[i]);
-      if(i % 16 == 15) printf("\n");
-   }
-   printf("Sbox3:\n");
-   for(i = 0; i < 256; i++) {
-      printf("%3d ", sbox3[i]);
-      if(i % 16 == 15) printf("\n");
-   }
-   printf("Sbox4:\n");
-   for(i = 0; i < 256; i++) {
-      printf("%3d ", sbox4[i]);
-      if(i % 16 == 15) printf("\n");
-   }*/
 
    //choise of the mode (encryption or decryption) and key length (128, 192 or 256)
    if(!(strcmp(argv[1], "-e"))){
@@ -647,32 +625,22 @@ int main(int argc, char **argv) {
             printL(kl[i]);
          //encryption
          pQ.l[0] = xor_L(pQ.l[0], kw[0]);
-         printQ(pQ);
          pQ.l[1] = xor_L(pQ.l[1], kw[1]);
-         printQ(pQ);
          for(i = 0; i < 6; i++) {
             pQ = func_round(pQ, k, i);
-            printQ(pQ);
          }
          pQ.l[0] = func_FL(pQ.l[0], kl[0]);
-         printQ(pQ);
          pQ.l[1] = func_FL_1(pQ.l[1], kl[1]);
-         printQ(pQ);
          for(i = 6; i < 12; i++) {
             pQ = func_round(pQ, k, i);
-            printQ(pQ);
          }
          pQ.l[0] = func_FL(pQ.l[0], kl[2]);
-         printQ(pQ);
          pQ.l[1] = func_FL_1(pQ.l[1], kl[3]);
-         printQ(pQ);
          for(i = 12; i < 18; i++) {
             pQ = func_round(pQ, k, i);
-            printQ(pQ);
          }
          struct L tmp = pQ.l[0];
          pQ.l[0] = xor_L(pQ.l[1], kw[2]);
-         printQ(pQ);
          pQ.l[1] = xor_L(tmp, kw[3]);
 
          //printing result
@@ -716,7 +684,46 @@ int main(int argc, char **argv) {
             kp += 2;
             //printf("%02X", key[i]);
          }
+         //printf("\n");
+         struct Q keyQ = tab_to_Q(key, 16);
+         printf("key: ");
+         printQ(keyQ);
 
+         //key schedule
+         struct L kw[4], k[18], kl[4];
+         gen_keys128(kw, k, kl, keyQ);
+         //printing keys
+         printf("kw: \n");
+         for(i = 0; i < 4; i++)
+            printL(kw[i]);
+         printf("k: \n");
+         for(i = 0; i < 18; i++)
+            printL(k[i]);
+         printf("kl: \n");
+         for(i = 0; i < 4; i++)
+            printL(kl[i]);
+         //decryption
+         pQ.l[0] = xor_L(pQ.l[0], kw[2]);
+         pQ.l[1] = xor_L(pQ.l[1], kw[3]);
+         for(i = 17; i > 11; i--) {
+            pQ = func_round(pQ, k, i);
+         }
+         pQ.l[0] = func_FL(pQ.l[0], kl[3]);
+         pQ.l[1] = func_FL_1(pQ.l[1], kl[2]);
+         for(i = 11; i > 5; i--) {
+            pQ = func_round(pQ, k, i);
+         }
+         pQ.l[0] = func_FL(pQ.l[0], kl[1]);
+         pQ.l[1] = func_FL_1(pQ.l[1], kl[0]);
+         for(i = 5; i >= 0; i--) {
+            pQ = func_round(pQ, k, i);
+         }
+         struct L tmp = pQ.l[0];
+         pQ.l[0] = xor_L(pQ.l[1], kw[0]);
+         pQ.l[1] = xor_L(tmp, kw[1]);
+
+         //printing result
+         printQ(pQ);
       }
       else if(!(strcmp(argv[2], "-192"))){ //decryption with 192-bit key
          //key
